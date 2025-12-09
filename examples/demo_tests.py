@@ -61,33 +61,167 @@ class TestPullData(unittest.TestCase):
 class TestMarketData(unittest.TestCase):
     """
     Test suite for MarketData class (Christopher's Section)
-    Status - (Testing - [IN-PROCESS])
+    Status - (Testing - [DONE])
     """
-    pass
+    def setUp(self):
+        self.market = MarketData()
+
+    def test_marketdata_initial(self):
+        """
+        Test: MarketData is initialized with a vaild input 
+        """
+        self.assertIsNone(self.market, "MarketData should have a value")
+        self.assertEqual(self.market._base_currency, 'usd', "Should have USD as default")
+
+    def test_marketdata_initial_check(self):
+        """
+        Test: MarketData should reject an invalid currency
+        """
+        with self.assertRaises(ValueError):
+            # There is nothing - Should raise
+            MarketData("")
+        
+        with self.assertRaises(ValueError):
+            # There is nothing - Should raise
+            MarketData(" ")
+        
+    def test_marketdata_data_fetch_success(self):
+        """
+        I/O Test: Checking if fetch_data() gets all market Data
+        """
+        ans = self.market.fetch_data(limit=10)
+
+        if ans:
+            self.assertTrue(ans, "Should return True if successful with fetch")
+            self.assertFalse(self.market.data.empty, "Must have data")
+        else:
+            self.skipTest("Unable to fetch API")
+    
+    def test_marketdata_limit(self):
+        """
+        Test: fetch_data() limit parameter
+        """
+        # When limit is zero
+        with self.assertRaises(ValueError):
+            self.market.fetch_data(limit=0)
+
+        # When limit is above possible value
+        with self.assertRaises(ValueError):
+            self.market.fetch_data(limit=300)
+
+    def test_marketdata_timestamp(self):
+        """
+        Test: Update timestamp to be tracked
+        """
+        self.assertIsNone(self.market.previous_update, "Must be none before fetch")
+
+        ans = self.market.fetch_data(limit=10)
+
+        if ans:
+            self.assertIsNotNone(self.market.previous_update, "Must have a timestamp after fetch")
+        
+    def test_marketdata_lookup_valid(self):
+        """
+        Test: get_crypto_price() has a vaild input
+        """
+        with self.assertRaises(ValueError):
+            self.market.get_crypto_price("")
+        
+        with self.assertRaises(ValueError):
+            self.market.get_crypto_price(" ")
+
 
 class TestCryptoMarketDisplay(unittest.TestCase):
     """
     Test suite for CryptoMarketDisplay class (Linwood's section)
     Tests display formatting and user interaction
-    Status - (Testing - [IN-PROCESS])
+    Status - (Testing - [DONE])
     """
-    pass
+    
+    def setUp(self):
+        """setting up fixtures"""
+        # An example 
+        self.sample_data = pd.DataFrame([
+            {
+                'name': 'Bitcoin',
+                'symbol': 'btc',
+                'current_price': 50000.00,
+                'change_24h': 2.5
+            },
+            {
+                'name': 'Ethereum',
+                'symbol': 'eth',
+                'current_price': 3000.00,
+                'change_24h': -1.2
+            }
+        ])
+
+    def test_display_initial(self):
+        """Test: CryptoMarketDisplay as DataFrame """
+        display = CryptoMarketDisplay(self.sample_data)
+        self.assertIsNone(display, "Display should start")
+
+    def test_display_initial_valid(self):
+        """Test: Checks if CryptoMarketDisplay reject non-DataFrame"""
+        with self.assertRaises(TypeError):
+            CryptoMarketDisplay("Not a DataFrame Type")
+
+        with self.assertRaises(TypeError):
+            CryptoMarketDisplay(None)
+    
+
 
 class TestPortfolio(unittest.TestCase):
     """
     Test suite for Portfolio class (Bushra's Section)
     Tests wallet management and Transactions
-    Status - (Testing - [IN-PROCESS])
+    Status - (Testing - [DONE])
     """
-    pass
+    def setUp(self):
+        """Set up test fixtures"""
+        self.portfolio = Portfolio(1000)
+    
+    def test_portfolio_initial(self):
+        """Test: Portfolio initializes with starting funds"""
+        self.assertEqual(self.portfolio.funds, 10000, "Should start with correct funds")
+
+    def test_portfolio_balance_tracking(self):
+        """Persistence Test: Portfolio tracks balance changes"""
+        initial = self.portfolio.funds
+        self.portfolio.funds -= 1000
+        
+        self.assertEqual(self.portfolio.funds, initial - 1000, "Balance should persist changes")
+
+    def test_portfolio_see_current_funds(self):
+        """Persistence Test: seeCurrentFunds() returns balance"""
+        funds = self.portfolio.seeCurrentFunds()
+        
+        self.assertEqual(funds, 10000.00, "Should return current funds")
+        self.assertIsInstance(funds, float, "Should return float")
+
+    def test_portfolio_see_value_empty(self):
+        """Test: seePortfolioValue() handles empty portfolio"""
+        value = self.portfolio.seePortfolioValue()
+        self.assertEqual(value, 0.0, "Empty portfolio should have 0 value")
+
 
 class TestTransactions(unittest.TestCase):
     """
     Test suite for Buy, Sell and Transcation classes (Bushra's Section)
     Tests Transactions functions
-    Status - (Testing - [IN-PROCESS])
+    Status - (Testing - [DONE])
     """
-    pass
+    def test_buy_inheritance(self):
+        """Test: Buy inherits from Transaction"""
+        self.assertTrue(issubclass(Buy, Transaction), "Buy should be Transaction subclass")
+
+    def test_sell_inheritance(self):
+        """Test: Sell inherits from Transaction"""
+        self.assertTrue(issubclass(Sell, Transaction), "Sell should be Transaction subclass")
+
+    def test_transaction_abstract_class(self):
+        """Test: Transaction is abstract base"""
+        self.assertTrue(hasattr(Transaction, 'value'), "Transaction should have value method")
 
 class TestPriceChartsGraphs(unittest.TestCase):
     """
@@ -141,6 +275,10 @@ def main():
     # Adding All test class to loadTestsFromTestCase()
     suite.addTest(loader.loadTestsFromTestCase(TestPullData))
     suite.addTest(loader.loadTestsFromTestCase(TestPriceChartsGraphs))
+    suite.addTest(loader.loadTestsFromTestCase(TestMarketData))
+    suite.addTest(loader.loadTestsFromTestCase(TestCryptoMarketDisplay))
+    suite.addTest(loader.loadTestsFromTestCase(TestPortfolio))
+    suite.addTest(loader.loadTestsFromTestCase(TestTransactions))
 
     # Running tests 
     runner = unittest.TextTestRunner(verbosity=2)
