@@ -2,16 +2,23 @@ import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from src import PullData, Transaction, Buy, Sell, Portfolio, MarketData, Portfolio_Helper, Price_Charts_Graphs, CryptoMarketDisplay
 
-
 dataPuller = PullData()
 display = CryptoMarketDisplay(dataPuller.get_market_data())
 market = MarketData()
-
-choice = int(input("How much funds do you have?\n"))
+choice = 1000#int(input("How much funds do you have?\n"))
 portfo = Portfolio(choice)
 
-display.menu()
+# dataPuller.get_current_price(['bitcoin'])
 
+choice = "bitcoin"#input("What crypto do you want to buy? 1) Nevermind\n")
+choice2 = 1
+trans = Transaction(choice, dataPuller, choice2)
+purchase = Buy(choice, dataPuller, choice2)
+# portfo.makeTransaction(purchase)
+
+
+
+display.menu()
 while(True):
     choice = input(
 """
@@ -54,7 +61,7 @@ Which Chart do you want?
             choice = input("What crypto do you want to buy? 1) Nevermind\n")
             if choice == "1":
                 break
-            choice2 = int(input("How much crypto do you want to buy?"))
+            choice2 = int(input("How much crypto do you want to buy?\n"))
             if choice2 <= 0:
                 print("Not Valid, Try again")
                 continue
@@ -70,7 +77,7 @@ Which Chart do you want?
             choice = input("What crypto do you want to sell? 1) Nevermind\n")
             if choice == "1":
                 break
-            choice2 = int(input("How much crypto do you want to sell?"))
+            choice2 = int(input("How much crypto do you want to sell?\n"))
             if choice2 <= 0:
                 print("Not Valid, Try again")
                 continue

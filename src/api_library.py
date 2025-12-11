@@ -204,9 +204,7 @@ class PullData:
         return prices
 
 class Transaction:
-    pointPrice: int
-
-    def __init__(self, crypto_id: str, datapuller: PullData, amount):
+    def __init__(self, crypto_id: str, datapuller: PullData, amount: int):
         self.crypto_id = crypto_id
         self.datapuller = datapuller
         self.amount = amount
@@ -229,24 +227,24 @@ class Transaction:
         return f"Transaction({self.crypto_id}, amount={self._amount} at {self._timestamp}"
 
 class Buy(Transaction):
-    def __init__(self, crypto_id: str, datapuller: PullData, amount):
-        super(crypto_id, datapuller, amount)
+    def __init__(self, crypto_id: str, datapuller: PullData, amount: int):
         
-        price_data = self.data_puller.get_current_price([crypto_id])
-        if not price_data or crypto_id not in price_data:
-            print("Error: Could not fetch price for", crypto_id)
-            return
+        price_data = datapuller.get_current_price([crypto_id])[crypto_id]
+        # if not price_data or crypto_id not in price_data:
+        #     print("Error: Could not fetch price for", crypto_id)
+        #     return
         
         self.pointPrice = price_data[crypto_id]
+        # super(crypto_id, datapuller, amount)
 
     def value(self):
         return -1 * self.amount * self.pointPrice
 
 class Sell(Transaction):
-    def __init__(self, crypto_id: str, datapuller: PullData, amount):
+    def __init__(self, crypto_id: str, datapuller: PullData, amount: int):
         super(crypto_id, datapuller, amount)
         
-        price_data = self.data_puller.get_current_price([crypto_id])
+        price_data = datapuller.get_current_price([crypto_id])[crypto_id]
         if not price_data or crypto_id not in price_data:
             print("Error: Could not fetch price for", crypto_id)
             return
