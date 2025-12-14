@@ -228,41 +228,36 @@ class Transaction:
 
 class Buy(Transaction):
     def __init__(self, crypto_id: str, datapuller: PullData, amount: int):
-        
-        price_data = datapuller.get_current_price([crypto_id])[crypto_id]
-        # if not price_data or crypto_id not in price_data:
-        #     print("Error: Could not fetch price for", crypto_id)
-        #     return
-        
+        price_data = datapuller.get_current_price([crypto_id])
         self.pointPrice = price_data[crypto_id]
-        # super(crypto_id, datapuller, amount)
+        super().__init__(crypto_id, datapuller, amount)
 
     def value(self):
         return -1 * self.amount * self.pointPrice
 
 class Sell(Transaction):
     def __init__(self, crypto_id: str, datapuller: PullData, amount: int):
-        super(crypto_id, datapuller, amount)
-        
-        price_data = datapuller.get_current_price([crypto_id])[crypto_id]
-        if not price_data or crypto_id not in price_data:
-            print("Error: Could not fetch price for", crypto_id)
-            return
-        
+        price_data = datapuller.get_current_price([crypto_id])
         self.pointPrice = price_data[crypto_id]
+        super().__init__(crypto_id, datapuller, amount)
 
     def value(self):
         return self.amount * self.pointPrice
 
 class Portfolio:
     def __init__(self, startingFunds: float):
-        self._transactions = List[Transaction]
+        self._transactions: list[Transaction] = []
         self.funds = startingFunds
         self.portfolio_value = 0
 
     def makeTransaction(self, transaction: Transaction):
+        if isinstance(transaction, Sell):
+            owned = self.portfolioHoldings()[transaction.crypto_id]
+            if owned == None or owned <= 0 or owned - transaction.amount < 0:
+                return f"Cannot sell {transaction.crypto_id}. Ensure you have enough before making sales"
         self._transactions.append(transaction)
         self.funds += transaction.value()
+        return "Success"
 
     def seePastTransactions(self) -> None:
         print(self._transactions)
@@ -275,6 +270,19 @@ class Portfolio:
             return 0.0
 
         # Track net amount held for each crypto
+        holdings = self.portfolioHoldings()
+
+        datapuller = PullData()
+        prices = datapuller.get_current_price(list(holdings.keys()))
+        # Calculate total market value
+        total_value = 0.0
+        for coin, amt in holdings.items():
+            if coin in prices:
+                total_value += prices[coin] * amt
+
+        return round(total_value, 2)
+    
+    def portfolioHoldings(self) -> dict:
         holdings = {}
         for t in self._transactions:
             if t.crypto_id not in holdings:
@@ -285,16 +293,7 @@ class Portfolio:
                 holdings[t.crypto_id] += t.amount
             elif isinstance(t, Sell):
                 holdings[t.crypto_id] -= t.amount
-        datapuller = PullData()
-        prices = datapuller.get_current_price(list(holdings.keys()))
-
-        # Calculate total market value
-        total_value = 0.0
-        for coin, amt in holdings.items():
-            if coin in prices:
-                total_value += prices[coin] * amt
-
-        return round(total_value, 2)
+        return holdings
 
 class MarketData:
     """

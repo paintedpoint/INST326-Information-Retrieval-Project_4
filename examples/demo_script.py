@@ -1,21 +1,12 @@
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from src import PullData, Transaction, Buy, Sell, Portfolio, MarketData, Portfolio_Helper, Price_Charts_Graphs, CryptoMarketDisplay
+from src import PullData, Buy, Sell, Portfolio, MarketData, Portfolio_Helper, Price_Charts_Graphs, CryptoMarketDisplay
 
 dataPuller = PullData()
 display = CryptoMarketDisplay(dataPuller.get_market_data())
 market = MarketData()
 choice = 1000#int(input("How much funds do you have?\n"))
 portfo = Portfolio(choice)
-
-# dataPuller.get_current_price(['bitcoin'])
-
-choice = "bitcoin"#input("What crypto do you want to buy? 1) Nevermind\n")
-choice2 = 1
-trans = Transaction(choice, dataPuller, choice2)
-purchase = Buy(choice, dataPuller, choice2)
-# portfo.makeTransaction(purchase)
-
 
 
 display.menu()
@@ -87,11 +78,27 @@ Which Chart do you want?
                 break
             except:
                 print("I didn't understand what you wanted. Please try again")
-
-        print("Sold!")
     elif choice == "5":
-        portfo.seePortfolioValue()
-        portfo.seePastTransactions()
+        while(True):
+            choice = input(
+"""
+What would you like to see?
+1) Portfolio Holdings
+2) Portfolio Value
+3) Past Transactions
+4) Exit
+"""
+            )
+            if choice == "1":
+                print(portfo.portfolioHoldings())
+            elif choice == "2":
+                print(portfo.seePortfolioValue())
+            elif choice == "3":
+                portfo.seePastTransactions()
+            elif choice == "4":
+                break
+            else:
+                print("I didn't understand that...")
     elif choice == "6":
         break
     else:
