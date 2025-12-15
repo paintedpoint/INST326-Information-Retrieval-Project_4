@@ -6,6 +6,7 @@ This project intends to pull data from an API (CoinGecko) and then use it to dis
 
 Presentation Link:
 William Chen (https://drive.google.com/file/d/1QsMzCf5MCI-kBJ5crx_2PlpfSsyIJeXj/view?usp=sharing)
+Christopher Mendez (https://drive.google.com/file/d/1IMU53KumYM4x4BD7tUbLRCrPq5DFvxn/view?usp=sharing)
 
 ***
 This project focuses on cryptocurrency data retrieval and portfolio management. It integrates market data from CoinGecko to provides users with an interactive interface to track crypto investments.
