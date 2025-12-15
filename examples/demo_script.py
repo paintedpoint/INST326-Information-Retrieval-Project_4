@@ -5,7 +5,7 @@ from src import PullData, Buy, Sell, Portfolio, MarketData, Portfolio_Helper, Pr
 dataPuller = PullData()
 display = CryptoMarketDisplay(dataPuller.get_market_data())
 market = MarketData()
-choice = 1000#int(input("How much funds do you have?\n"))
+choice = int(input("How much funds do you have?\n"))
 portfo = Portfolio(choice)
 
 
