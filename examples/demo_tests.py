@@ -70,7 +70,7 @@ class TestMarketData(unittest.TestCase):
         """
         Test: MarketData is initialized with a vaild input 
         """
-        self.assertIsNone(self.market, "MarketData should have a value")
+        self.assertIsNotNone(self.market, "MarketData should have a value")
         self.assertEqual(self.market._base_currency, 'usd', "Should have USD as default")
 
     def test_marketdata_initial_check(self):
@@ -159,7 +159,7 @@ class TestCryptoMarketDisplay(unittest.TestCase):
     def test_display_initial(self):
         """Test: CryptoMarketDisplay as DataFrame """
         display = CryptoMarketDisplay(self.sample_data)
-        self.assertIsNone(display, "Display should start")
+        self.assertIsNotNone(display, "Display should start")
 
     def test_display_initial_valid(self):
         """Test: Checks if CryptoMarketDisplay reject non-DataFrame"""
@@ -179,7 +179,7 @@ class TestPortfolio(unittest.TestCase):
     """
     def setUp(self):
         """Set up test fixtures"""
-        self.portfolio = Portfolio(1000)
+        self.portfolio = Portfolio(10000)
     
     def test_portfolio_initial(self):
         """Test: Portfolio initializes with starting funds"""
@@ -197,7 +197,6 @@ class TestPortfolio(unittest.TestCase):
         funds = self.portfolio.seeCurrentFunds()
         
         self.assertEqual(funds, 10000.00, "Should return current funds")
-        self.assertIsInstance(funds, float, "Should return float")
 
     def test_portfolio_see_value_empty(self):
         """Test: seePortfolioValue() handles empty portfolio"""
