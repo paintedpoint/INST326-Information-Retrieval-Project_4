@@ -11,6 +11,8 @@ Christopher Mendez (https://drive.google.com/file/d/1IMU53KumYM4x4BD7tUbLRCrPq5D
 
 Bushra Hussain (https://docs.google.com/videos/d/1pZhaQapdXTgf3klmUEat943U8aIeShoHP-OK2lST448/edit?usp=drive_link)
 
+Linwood Tie (https://drive.google.com/file/d/18pCf0o5jDCWvJ_yOhldWNPuwEkqLb4lJ/view?usp=sharing)
+
 ***
 This project focuses on cryptocurrency data retrieval and portfolio management. It integrates market data from CoinGecko to provides users with an interactive interface to track crypto investments.
 ***
