@@ -9,6 +9,8 @@ William Chen (https://drive.google.com/file/d/1QsMzCf5MCI-kBJ5crx_2PlpfSsyIJeXj/
 
 Christopher Mendez (https://drive.google.com/file/d/1IMU53KumYM4x4BD7tUbLRCrPq5DFvaxn/view?usp=sharing)
 
+Bushra Hussain (https://docs.google.com/videos/d/1pZhaQapdXTgf3klmUEat943U8aIeShoHP-OK2lST448/edit?usp=drive_link)
+
 ***
 This project focuses on cryptocurrency data retrieval and portfolio management. It integrates market data from CoinGecko to provides users with an interactive interface to track crypto investments.
 ***
