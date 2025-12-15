@@ -38,9 +38,11 @@ Which Chart do you want?
                 if choice == "1":
                     print("\n * Generating Price Chart...")
                     charts.create_price_chart(market, top_n=15)  # Pass market object, not data
+                    break
                 elif choice == "2":
                     print("\n * Generating 24h Change Chart...")
                     charts.create_changing_chart(market, top_n=15)  # Correct method name
+                    break
                 elif choice == "3":
                     break
                 else:
